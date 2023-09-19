@@ -6,7 +6,7 @@ const db = mysql.createConnection(
         host: 'localhost',
         // MySql username, 
         user: 'root',
-        password: ' ',
+        password: '',
         database: 'work_db'
     },
     console.log(`Connected to the database.`)
@@ -23,7 +23,7 @@ function mainPrompt() {
             type: 'list',
             name: 'options',
             message: 'What would you like to do?',
-            choices: ["View all departments", "View all roles", "View all employees", "Add a department", "Add a role", "Add an employee", "Add a role"]
+            choices: ["View all departments", "View all roles", "View all employees", "Add a department", "Add a role", "Add an employee", "Update an employee role"]
         }
     ])
 
@@ -38,11 +38,13 @@ function mainPrompt() {
                 addDepartment()
             } else if (answers.options === "Add a role"){
                 addRole()
+            } else if (answers.options === "Add an employee"){
+                addEmployee()
             } else if (answers.options === "Update an employee role"){
                 updateEmployeeRole()
             }
         })
-
+    }
 function viewDepartment() {
     db.query('SELECT * FROM department', function (err, results) {
         console.log();
@@ -57,25 +59,25 @@ function viewRoles() {
         console.table(results);
         mainPrompt();
     });
-
+}
     function viewEmployees() {
-        db.quert('SELECT * FROM employee', function (err, results) {
+        db.query('SELECT * FROM employee', function (err, results) {
             console.log();
             console.table(results);
             mainPrompt();
         });
-
+    }
 function addDepartment() {
-    inquirer.prompts([
+    inquirer.prompt([
         {
             type: 'input',
             name: 'addDept',
-            message: 'What department name would you like to add?'
+            message: 'What department would you like to add?'
         }
     ])
     .then((answer) => {
         const sql = `INSERT INTO department (name) VALUES (?)`
-        const params = [answers.addDept];
+        const params = [answer.addDept];
         db.query(sql, params, (err, results) => {
             console.log(err);
             db.query('SELECT * FROM department', function (err, res) {
@@ -85,7 +87,7 @@ function addDepartment() {
             })
         })
     })
-}
+    }
 
 async function addRole(){
     const roles = await db.promise().query('SELECT id AS value, CONCAT(name) AS name FROM department');
@@ -122,7 +124,7 @@ async function addRole(){
     updated(ans.addRole, ans.addSalary, ans.deptId);
     }
 
-async function addEmp(){
+async function addEmployee(){
     const role = await db.promise().query('SELECT id AS value, CONCAT(title) AS name FROM role');
     const users = await db.promise().query('SELECT id AS value, CONCAT(last_name, \', \', first_name) AS name FROM employee');
 
@@ -150,6 +152,31 @@ async function addEmp(){
             choices: users[0]
         }
     ])
+    const updated = ((answer1, answer2, answer3, answer4) => {
+        const sql = `INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?)`
+        const params = [answer1, answer2, answer3, answer4]
+    db.query(sql, params, (err, result) => {
+        console.log(err);
+        db.query('SELECT * FROM employee', function (err, results) {
+            console.log();
+            console.table(results);
+        });
+        mainPrompt();
+    })
+})
+updated(ans.firstName, ans.lastName, ans.role, ans.manager)
 }
-}
-}
+
+// async function updateEmployeeRole() {
+//     const users = await db.promise().query('SELECT id AS value, CONCAT(last_name, \', \', first_name) AS name FROM employee');
+
+//     const ans = await inquirer.prompt([
+//         {
+//             type: 'list',
+//             name: 'updateEmployee',
+//             message: 'Which employee'
+//         }
+//     ])
+// }
+// }
+// }
