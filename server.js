@@ -166,17 +166,3 @@ async function addEmployee(){
 })
 updated(ans.firstName, ans.lastName, ans.role, ans.manager)
 }
-
-// async function updateEmployeeRole() {
-//     const users = await db.promise().query('SELECT id AS value, CONCAT(last_name, \', \', first_name) AS name FROM employee');
-
-//     const ans = await inquirer.prompt([
-//         {
-//             type: 'list',
-//             name: 'updateEmployee',
-//             message: 'Which employee'
-//         }
-//     ])
-// }
-// }
-// }
