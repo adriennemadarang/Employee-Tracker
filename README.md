@@ -17,6 +17,8 @@ SO THAT I can organize and plan my business<br>
 ## Screenshot
 <img width="700" alt="Screen Shot 2023-09-18 at 11 16 37 PM" src="https://github.com/adriennemadarang/Employee-Tracker/assets/128556908/e2cff4c9-f928-4b92-af3d-6496ab40c979">
 
+[Link for full video walkthrough](https://drive.google.com/file/d/1bE_JQvb6k0xLHo0Y95e824OaioCkAyZ-/view)
+
 
 ## Credits
 Shoutout to my classmates for providing feedback. 
