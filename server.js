@@ -107,8 +107,49 @@ async function addRole(){
             choices: roles[0]
         }
     ])
-    const 
-}
+    const updated = ((answer1, answer2, answer3) => {
+        const sql = `INSERT INTO role (title, salary, department_id) VALUES (?, ?, ?)`
+        const params = [answer1, answer2, answer3]
+        db.query(sql, params, (err, result) => {
+            console.log(err);
+            db.query('SELECT * FROM role', function (err, results) {
+                console.log();
+                console.table(results);
+            });
+            mainPrompt();
+        })
+    })
+    updated(ans.addRole, ans.addSalary, ans.deptId);
     }
+
+async function addEmp(){
+    const role = await db.promise().query('SELECT id AS value, CONCAT(title) AS name FROM role');
+    const users = await db.promise().query('SELECT id AS value, CONCAT(last_name, \', \', first_name) AS name FROM employee');
+
+    const ans = await inquirer.prompt([
+        {
+            type: 'input',
+            name: 'firstName',
+            message: 'Enter the first name of new employee.'
+        },
+        {
+            type: 'input',
+            name: 'lastName',
+            message: 'Enter the last name of new employee.'
+        },
+        {
+            type: 'list',
+            name: 'role',
+            message: 'What is the role of new employee?',
+            choices: role[0]
+        },
+        {
+            type: 'list',
+            name: 'manager',
+            message: 'Who is the manager of the new employee?',
+            choices: users[0]
+        }
+    ])
+}
 }
 }
